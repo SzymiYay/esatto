@@ -1,3 +1,5 @@
+from ..address.model import Address
+
 from dataclasses import dataclass
 from typing import Any
 
