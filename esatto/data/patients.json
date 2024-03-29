@@ -4,9 +4,9 @@
         "last_name": "Doe",
         "PESEL": "00000000001",
         "address": {
-            "street": "Main Street",
-            "city": "New York",
-            "zip_code": "10001"
+            "street": "Krakowska",
+            "city": "Krakow",
+            "zip_code": "100001"
         }
     },
     {
@@ -14,9 +14,9 @@
         "last_name": "Brown",
         "PESEL": "00000000002",
         "address": {
-            "street": "Main Street",
-            "city": "New York",
-            "zip_code": "10001"
+            "street": "Dluga",
+            "city": "Warszawa",
+            "zip_code": "100001"
         }
     },
     {
@@ -24,9 +24,9 @@
         "last_name": "Smith",
         "PESEL": "00000000003",
         "address": {
-            "street": "Main Street",
-            "city": "New York",
-            "zip_code": "10001"
+            "street": "Wielka",
+            "city": "Poznan",
+            "zip_code": "100001"
         }
     }
 ]
