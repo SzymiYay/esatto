@@ -1,21 +1,20 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any
+from ..logger.model import MyLogger
 
 import re
 
 @dataclass
 class Validator(ABC):
-    errors: None
+    errors = None
 
     @abstractmethod
     def validate(self, data: dict[str, Any]) -> dict[str, Any]:
         raise NotImplementedError
-    
 
     def errors_to_str(self) -> str:
         return f"{', '.join([f'{key}: {message}' for key, message in self.errors.items()])}"
-    
 
     @staticmethod
     def matches_regex(regex: str, text: str) -> bool:
