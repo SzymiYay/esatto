@@ -33,10 +33,12 @@ class MyLogger:
     def get_logger():
         if not MyLogger.logger:
             MyLogger.logger = logging.getLogger('esatto')
+            MyLogger.logger.propagate = False
             MyLogger.logger.setLevel(logging.DEBUG)
-            ch = logging.StreamHandler()
-            ch.setLevel(logging.DEBUG)
-            ch.setFormatter(CustomFormatter())
-            MyLogger.logger.addHandler(ch)
+            if not MyLogger.logger.handlers: 
+                ch = logging.StreamHandler()
+                ch.setLevel(logging.DEBUG)
+                ch.setFormatter(CustomFormatter())
+                MyLogger.logger.addHandler(ch)
 
         return MyLogger.logger
