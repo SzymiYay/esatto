@@ -6,7 +6,6 @@ import os
 
 load_dotenv()
 
-
 class MySQLConnectionPoolBuilder:
     def __init__(self):
         self._pool_config = {
@@ -15,7 +14,7 @@ class MySQLConnectionPoolBuilder:
             'pool_reset_session': bool(os.getenv('POOL_RESET_SESSION')),
             'host': os.getenv('HOST'),
             'database': os.getenv('DATABASE'),
-            'user': os.getenv('USER'),
+            'user': os.getenv('USER_A'),
             'password': os.getenv('PASSWORD'),
             'port': int(os.getenv('PORT'))
         }
