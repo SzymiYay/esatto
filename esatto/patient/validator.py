@@ -20,6 +20,9 @@ class Validator(ABC):
     def matches_regex(regex: str, text: str) -> bool:
         return re.match(regex, text) is not None
     
+    @staticmethod
+    def has_only_upper(text: str) -> bool:
+        return Validator.matches_regex(r'^([A-Z]+\s?)+$', text)
 
 class PatientValidator(Validator):
 
