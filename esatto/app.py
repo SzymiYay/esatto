@@ -27,7 +27,7 @@ def main() -> None:
         'id': 'integer primary key auto_increment',
         'first_name': 'varchar(20) not null',
         'last_name': 'varchar(20) not null',
-        'PESEL': 'varchar(20) not null'
+        'PESEL': 'varchar(20) not null unique'
     }
 
     address_columns = {
@@ -87,5 +87,15 @@ def main() -> None:
 
     logger.info('Getting patient by PESEL')
     print(patient_service.get_patient_by_pesel('00000000001'))
+
+    logger.info('Adding patient')
+    # patient_repo.insert(Patient(first_name='Jan', last_name='Kowalski', PESEL='00000000004'))
+    # print(patient_repo.get_all())
+
+    logger.info('Editing patient')
+    print(patient_repo.update(6, Patient(first_name='Janusz', last_name='Kowalski', PESEL='12345678910')))
+
+    logger.info('Deleting patient')
+    patient_repo.delete_one(5)
 
     logger.warning('ENDING APP')
