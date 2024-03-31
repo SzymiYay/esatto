@@ -1,6 +1,6 @@
 from .data_loader.json_loader import get_patients_data
 from .data_loader.patients_loader import get_patients
-from .patient.service import PatientService
+from .patient.service import PatientsService
 from .patient.types import SortCriteria
 
 from .db.model.patient import Patient
@@ -13,8 +13,6 @@ from .db.repo.address import AddressRepo
 from .logger.model import CustomFormatter, MyLogger
 
 from typing import Final
-
-import logging 
 
 def main() -> None:
 
@@ -52,6 +50,7 @@ def main() -> None:
     #     Address(street='Nowa', city='Kraków', zip_code='000002', patient_id=2),
     #     Address(street='Kowalska', city='Warszawa', zip_code='000001', patient_id=3)
     # ])
+    patient_repo.insert(Patient(first_name='Jan', last_name=54, PESEL='00000000001'))
 
 
     """LOGGING"""
@@ -73,20 +72,20 @@ def main() -> None:
 
 
     patients = patient_repo.get_all()
-    patient_service = PatientService(patients)
+    patients_service = PatientsService(patients)
     logger.info('Successfully created patient service')
 
     logger.info('Sorting patients')
-    print(patient_service.sort_by(SortCriteria.FIRST_NAME))
-    print(patient_service.sort_by(SortCriteria.LAST_NAME))
-    print(patient_service.sort_by(SortCriteria.PESEL, reverse=True))
+    print(patients_service.sort_by(SortCriteria.FIRST_NAME))
+    print(patients_service.sort_by(SortCriteria.LAST_NAME))
+    print(patients_service.sort_by(SortCriteria.PESEL, reverse=True))
 
     logger.info('Getting patients by city')
-    patients_by_city = patient_service.get_patients_from_every_city(connection_pool)
+    patients_by_city = patients_service.get_patients_from_every_city(connection_pool)
     print(patients_by_city)
 
     logger.info('Getting patient by PESEL')
-    print(patient_service.get_patient_by_pesel('00000000001'))
+    print(patients_service.get_patient_by_pesel('00000000001'))
 
     logger.info('Adding patient')
     # patient_repo.insert(Patient(first_name='Jan', last_name='Kowalski', PESEL='00000000004'))
