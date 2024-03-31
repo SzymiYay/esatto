@@ -1,5 +1,7 @@
 from .data_loader.json_loader import get_patients_data
 from .data_loader.patients_loader import get_patients
+from .patient.service import PatientService
+from .patient.types import SortCriteria
 
 from .db.model.patient import Patient
 from .db.model.address import Address
@@ -56,7 +58,7 @@ def main() -> None:
     logger = MyLogger.get_logger()
 
     """APP"""
-    # logger.warning('STARTING APP')
+    logger.warning('STARTING APP')
     # FILENAME: Final[str] = 'esatto/data/patients.json'
 
     # patients_data = get_patients_data(FILENAME)
@@ -68,5 +70,22 @@ def main() -> None:
 
     # for patient in patients:
     #     print(patient)
+
+
+    patients = patient_repo.get_all()
+    patient_service = PatientService(patients)
+    logger.info('Successfully created patient service')
+
+    logger.info('Sorting patients')
+    print(patient_service.sort_by(SortCriteria.FIRST_NAME))
+    print(patient_service.sort_by(SortCriteria.LAST_NAME))
+    print(patient_service.sort_by(SortCriteria.PESEL, reverse=True))
+
+    logger.info('Getting patients by city')
+    patients_by_city = patient_service.get_patients_from_every_city(connection_pool)
+    print(patients_by_city)
+
+    logger.info('Getting patient by PESEL')
+    print(patient_service.get_patient_by_pesel('00000000001'))
 
     logger.warning('ENDING APP')
