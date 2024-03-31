@@ -33,9 +33,10 @@ class CrudRepo:
                 connection.close()
 
 
-    def create_table(self, columns: str):
+    def create_table(self, columns: dict[str, str]):
         with self._get_connection() as cursor:
-            query = f"CREATE TABLE IF NOT EXISTS {self._table_name()} ({columns});"
+            column_definitions = ', '.join(f'{name} {type}' for name, type in columns.items())
+            query = f"CREATE TABLE IF NOT EXISTS {self._table_name()} ({column_definitions});"
             cursor.execute(query)
 
 
