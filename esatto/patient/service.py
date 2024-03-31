@@ -6,7 +6,7 @@ from ..db.repo.address import AddressRepo
 from dataclasses import dataclass
 
 @dataclass
-class PatientService:
+class PatientsService:
     patients: list[Patient]
 
     def sort_by(self, sort_criteria: SortCriteria, *, reverse=False) -> list[Patient]:
