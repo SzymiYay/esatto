@@ -53,10 +53,6 @@ def create_patient(patient, user_id: int):
 
 
 def delete_patient(patient_id: int):
-    # db_measurements = db.session.query(models.Measurement).filter(models.Measurement.patient_id == patient_id).all()
-    # for db_measurement in db_measurements:
-    #     db.session.delete(db_measurement)
-        
     db_patient = db.session.query(models.Patient).filter(models.Patient.id == patient_id).first()
 
     if not db_patient:
