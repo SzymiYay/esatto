@@ -1,0 +1,106 @@
+from fastapi import FastAPI
+from fastapi_sqlalchemy import DBSessionMiddleware
+from fastapi.middleware.cors import CORSMiddleware
+
+from src import docs
+from sqlalchemy import text
+
+import os
+import urllib
+import sqlalchemy
+import uvicorn
+import databases
+
+host_server = os.environ.get('DB_HOST', 'db')
+db_server_post = urllib.parse.quote_plus(os.environ.get('DB_PORT', '5432'))
+database_name = os.environ.get('DB_NAME', 'esatto_db')
+db_username = urllib.parse.quote_plus(os.environ.get('DB_USERNAME', 'postgres'))
+db_password = urllib.parse.quote_plus(os.environ.get('DB_PASSWORD', 'password'))
+ssl_mode = urllib.parse.quote_plus(os.environ.get('DB_SSL_MODE', 'prefer'))
+DATABASE_URL = f'postgresql://{db_username}:{db_password}@{host_server}:{db_server_post}/{database_name}?sslmode={ssl_mode}'
+
+metadata = sqlalchemy.MetaData()
+
+users = sqlalchemy.Table(
+    "users",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("username", sqlalchemy.String),
+    sqlalchemy.Column("email", sqlalchemy.String),
+    sqlalchemy.Column("password", sqlalchemy.String),
+    sqlalchemy.Column("disabled", sqlalchemy.Boolean),
+    sqlalchemy.Column("time_created", sqlalchemy.DateTime, server_default=text("CURRENT_TIMESTAMP")),
+    sqlalchemy.Column("time_updated", sqlalchemy.DateTime, onupdate=text("CURRENT_TIMESTAMP")),
+)
+
+patients = sqlalchemy.Table(
+    "patients",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("first_name", sqlalchemy.String),
+    sqlalchemy.Column("last_name", sqlalchemy.String),
+    sqlalchemy.Column("PESEL", sqlalchemy.String, unique=True),
+    sqlalchemy.Column("time_created", sqlalchemy.DateTime, server_default=text("CURRENT_TIMESTAMP")),
+    sqlalchemy.Column("time_updated", sqlalchemy.DateTime, onupdate=text("CURRENT_TIMESTAMP")),
+    sqlalchemy.Column("user_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id")),
+)
+
+addresses = sqlalchemy.Table(
+    "addresses",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("city", sqlalchemy.String),
+    sqlalchemy.Column("street", sqlalchemy.String),
+    sqlalchemy.Column("zip_code", sqlalchemy.String),
+    sqlalchemy.Column("time_created", sqlalchemy.DateTime, server_default=text("CURRENT_TIMESTAMP")),
+    sqlalchemy.Column("time_updated", sqlalchemy.DateTime, onupdate=text("CURRENT_TIMESTAMP")),
+    sqlalchemy.Column("patient_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("patients.id")),
+)
+
+engine = sqlalchemy.create_engine(DATABASE_URL, pool_size=3, max_overflow=0)
+metadata.create_all(engine)
+database = databases.Database(DATABASE_URL)
+
+
+app = FastAPI(
+    title="Temperature API",
+    description=docs.get_description(),
+    version="0.0.1",
+    terms_of_service="http://example.com/terms/",
+    contact={
+        "name": "API Support",
+        "url": "http://www.example.com/support",
+        "email": ""
+    },
+    license_info={
+        "name": "Apache 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+
+)
+
+@app.on_event("startup")
+async def startup():
+    await database.connect()
+
+@app.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.add_middleware(DBSessionMiddleware, db_url=DATABASE_URL)
+
+# app.include_router(auth_router.router, tags=["Auth"])
+# app.include_router(user_router.router, tags=["Users"])
+# app.include_router(patient_router.router, tags=["Patients"])
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
