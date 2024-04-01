@@ -18,10 +18,166 @@ This is a simple application that allows you to manage patients in a hospital. Y
    ```sh
    npm install
    ```
-4. Create a .env file in the root directory and add the following variables:
+4. Make sure you are on branch node-v1
    ```sh
-    MONGO_URI=your_mongo_uri
+   git checkout node-v1
+   ```
+5. Create a .env file in the root directory and add the following variables:
+   ```sh
+    MONGO_URL=your_mongo_url
     ```
+    You can get the URL from the MongoDB website: https://www.mongodb.com/cloud/atlas. Create a new cluster and get the URL.
+5. Start the project
+    ```sh
+    npm start
+    ```
+
+## Usage
+The application is a simple REST API. You can use Postman to test the endpoints. Below are the endpoints that you can use:
+
+### LOGIN, REGISTER
+- POST /auth/signup
+Body:
+```json
+{
+    "username": "your_username",
+    "email": "your_email",
+    "password": "your_password"
+}
+```
+- POST /auth/login
+Body:
+```json
+{
+    "email": "your_email",
+    "password": "your_password"
+}
+```
+- GET /auth/logout
+
+### USERS
+- GET /users/:id
+- GET /users
+```json
+{
+    "message": "Users fetched successfully",
+    "data": [
+        {
+            "_id": "660ace22f87c3c9097e9d6c4",
+            "username": "ja",
+            "email": "ja@ja.com",
+            "role": "user",
+            "patients": [],
+            "__v": 0
+        },
+        {
+            "_id": "660ad5d74a017d8774ce87d6",
+            "username": "test",
+            "email": "test@test.com",
+            "role": "admin",
+            "patients": [
+                {
+                    "patientId": "660ada4a623d9c5fbfe3e719",
+                    "_id": "660ada4a623d9c5fbfe3e71c"
+                }
+            ],
+            "__v": 0
+        }
+    ],
+    "status": 200,
+    "info": "OK"
+}
+```
+- GET /users/:id/patients
+```json
+{
+    "message": "Patients fetched successfully",
+    "data": [
+        {
+            "patientId": {
+                "_id": "660ada4a623d9c5fbfe3e719",
+                "first_name": "jan",
+                "last_name": "kowal",
+                "PESEL": "00000000003",
+                "address": {
+                    "city": "Krakow",
+                    "street": "Dluga",
+                    "zipcode": "000000",
+                    "_id": "660ada4a623d9c5fbfe3e71a"
+                },
+                "__v": 0
+            },
+            "_id": "660ada4a623d9c5fbfe3e71c"
+        }
+    ],
+    "status": 200,
+    "info": "OK"
+}
+```
+- DELETE /users/:id
+- PATCH /users/:id
+
+### PATIENTS
+- GET /patients/:id
+```json
+{
+    "message": "Patient fetched successfully",
+    "data": {
+        "_id": "660ada4a623d9c5fbfe3e719",
+        "first_name": "jan",
+        "last_name": "kowal",
+        "PESEL": "00000000003",
+        "address": {
+            "city": "Krakow",
+            "street": "Dluga",
+            "zipcode": "000000",
+            "_id": "660ada4a623d9c5fbfe3e71a"
+        },
+        "__v": 0
+    },
+    "status": 200,
+    "info": "OK"
+}
+```
+- GET /patients
+- POST /patients
+body:
+```json
+{
+    "first_name": "jan",
+    "last_name": "kowal",
+    "PESEL": "00000000003",
+    "address": {
+        "city": "Krakow",
+        "street": "Dluga",
+        "zipcode": "000000"
+    }
+}
+```
+body response:
+```json
+{
+    "message": "Patient registered successfully",
+    "data": {
+        "first_name": "jan",
+        "last_name": "kowal",
+        "PESEL": "00000000003",
+        "address": {
+            "city": "Krakow",
+            "street": "Dluga",
+            "zipcode": "000000",
+            "_id": "660ada4a623d9c5fbfe3e71a"
+        },
+        "_id": "660ada4a623d9c5fbfe3e719",
+        "__v": 0
+    },
+    "status": 200,
+    "info": "OK"
+}
+```
+- DELETE /patients/:id
+- PATCH /patients/:id
+
 
 ## Contributing
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
