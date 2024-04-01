@@ -48,11 +48,23 @@ git clone https://github.com/SzymiYay/esatto
 ```sh
 git checkout python-v2
 ```
-3. Run the project
+3. Add .env file with the following content:
+```json
+DB_HOST=db
+DB_PORT=5432
+DB_NAME=esatto_db
+DB_USERNAME=postgres
+DB_PASSWORD=password
+DB_SSL_MODE=prefer
+
+PGADMIN_EMAIL=admin@admin.com
+PGADMIN_PASSWORD=admin
+```
+4. Run the project
 ```sh
 docker-compose up
 ```
-4. Open the browser and go to the following address:
+5. Open the browser and go to the following address:
 ```sh
 http://localhost:8000/docs
 ```
