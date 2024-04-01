@@ -1,6 +1,6 @@
 # PATIENT SERVICE
 
-Two versions of projects are on branch python-v1 and node-v1.
+Two versions of project are on branch python-v1 and node-v1.
 
 ## Contributing
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
