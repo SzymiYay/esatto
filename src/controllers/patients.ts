@@ -2,6 +2,7 @@ import express from 'express';
 import { getReasonPhrase } from 'http-status-codes';
 
 import { createPatient, deletePatientById, getPatientById, getPatientByName, getPatients } from '../db/patients';
+import { getUserBySessionToken, updatePatients } from '../db/users';
 
 export const getAllPatients = async (req: express.Request, res: express.Response) => {
     try {
@@ -50,6 +51,8 @@ export const getPatient = async (req: express.Request, res: express.Response) =>
 export const registerPatient = async (req: express.Request, res: express.Response) => {
     try {
         const { first_name, last_name, PESEL, address } = req.body;
+        const user = await getUserBySessionToken(req.cookies.token).lean();
+        const userId = user._id.toString();
 
         if (!first_name || !last_name || !PESEL || !address) {
             return res.status(400).json({
@@ -75,6 +78,8 @@ export const registerPatient = async (req: express.Request, res: express.Respons
             PESEL, 
             address,
         });
+
+        await updatePatients(userId, { patientId: patient._id });
 
         return res.status(200).json({
             message: 'Patient registered successfully',
