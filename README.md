@@ -14,13 +14,13 @@ This is a simple application that allows you to manage patients in a hospital. Y
    git clone https://github.com/SzymiYay/esatto
    ```
 2. To start the project, you need to have Node.js installed on your computer. If you don't have it, you can download it from the official website: https://nodejs.org/en/
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Make sure you are on branch node-v1
+3. Make sure you are on branch node-v1
    ```sh
    git checkout node-v1
+   ```
+4. Install NPM packages
+   ```sh
+   npm install
    ```
 5. Create a .env file in the root directory and add the following variables:
    ```sh
