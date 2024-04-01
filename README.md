@@ -1,7 +1,7 @@
 # PATIENT SERVICE
 
 ---
-### Two versions of the project are on branch *python-v1* and *node-v1*.
+### Three versions of the project are on branch *python-v1*, *python-v2* and *node-v1*.
 ---
 
 ## Contributing
