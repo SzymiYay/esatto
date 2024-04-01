@@ -48,7 +48,7 @@ The project is a simple console application that allows you to manage patients. 
    ```
 9. Run tests:
    ```sh
-   pytest
+   poetry run pytest
    ```
 
 ## Usage
