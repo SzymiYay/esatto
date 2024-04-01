@@ -2,6 +2,9 @@ from fastapi import FastAPI
 from fastapi_sqlalchemy import DBSessionMiddleware
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.auth import router as auth_router
+from src.users import router as user_router
+
 from src import docs
 from sqlalchemy import text
 
@@ -40,21 +43,12 @@ patients = sqlalchemy.Table(
     sqlalchemy.Column("first_name", sqlalchemy.String),
     sqlalchemy.Column("last_name", sqlalchemy.String),
     sqlalchemy.Column("PESEL", sqlalchemy.String, unique=True),
-    sqlalchemy.Column("time_created", sqlalchemy.DateTime, server_default=text("CURRENT_TIMESTAMP")),
-    sqlalchemy.Column("time_updated", sqlalchemy.DateTime, onupdate=text("CURRENT_TIMESTAMP")),
-    sqlalchemy.Column("user_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id")),
-)
-
-addresses = sqlalchemy.Table(
-    "addresses",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column("city", sqlalchemy.String),
     sqlalchemy.Column("street", sqlalchemy.String),
     sqlalchemy.Column("zip_code", sqlalchemy.String),
     sqlalchemy.Column("time_created", sqlalchemy.DateTime, server_default=text("CURRENT_TIMESTAMP")),
     sqlalchemy.Column("time_updated", sqlalchemy.DateTime, onupdate=text("CURRENT_TIMESTAMP")),
-    sqlalchemy.Column("patient_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("patients.id")),
+    sqlalchemy.Column("user_id", sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id")),
 )
 
 engine = sqlalchemy.create_engine(DATABASE_URL, pool_size=3, max_overflow=0)
@@ -97,9 +91,8 @@ app.add_middleware(
 
 app.add_middleware(DBSessionMiddleware, db_url=DATABASE_URL)
 
-# app.include_router(auth_router.router, tags=["Auth"])
-# app.include_router(user_router.router, tags=["Users"])
-# app.include_router(patient_router.router, tags=["Patients"])
+app.include_router(auth_router.router, tags=["Auth"])
+app.include_router(user_router.router, tags=["Users"])
 
 
 if __name__ == "__main__":
